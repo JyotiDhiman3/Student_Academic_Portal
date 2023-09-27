@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>acadofficecli.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">pro_cs305</a> &gt; <a href="index.source.html" class="el_package">cs305_pro</a> &gt; <span class="el_source">acadofficecli.java</span></div><h1>acadofficecli.java</h1><pre class="source lang-java linenums">package cs305_pro;
+//package net.codejava.jdbc;
+
+import java.io.*;
+import java.sql.*;
+import java.util.*;
+
+<span class="nc" id="L8">public class acadofficecli {</span>
+    private static Connection connection;
+
+    public void initializeConnection() {
+        try {
+<span class="nc" id="L13">            connection = DriverManager.getConnection(</span>
+<span class="nc" id="L14">                    &quot;jdbc:postgresql://localhost:5432/db&quot;,</span>
+<span class="nc" id="L15">                    &quot;postgres&quot;,</span>
+<span class="nc" id="L16">                    &quot;1234&quot;);</span>
+<span class="nc" id="L17">        } catch (SQLException e) {</span>
+<span class="nc" id="L18">            System.err.println(&quot;Error connecting to the database: &quot; + e.getMessage());</span>
+        }
+<span class="nc" id="L20">    }</span>
+
+    public void run(Connection connection) throws SQLException {
+<span class="nc" id="L23">        Scanner scanner = new Scanner(System.in);</span>
+<span class="nc" id="L24">        System.out.println(&quot;Welcome!&quot;);</span>
+<span class="nc" id="L25">        while (true) {</span>
+<span class="nc" id="L26">            System.out.println(&quot;Press 1 to edit course catalog&quot;);</span>
+<span class="nc" id="L27">            System.out.println(&quot;Press 2 to view grades of all students&quot;);</span>
+<span class="nc" id="L28">            System.out.println(&quot;Press 3 to generate transcript of students&quot;);</span>
+<span class="nc" id="L29">            System.out.println(&quot;Press 4 to logout&quot;);</span>
+<span class="nc" id="L30">            int option = scanner.nextInt();</span>
+<span class="nc bnc" id="L31" title="All 5 branches missed.">            switch (option) {</span>
+                case 1:
+<span class="nc" id="L33">                    editCourseCatalog();</span>
+<span class="nc" id="L34">                    break;</span>
+                case 2:
+<span class="nc" id="L36">                    viewGradesOfAllStudents(connection);</span>
+<span class="nc" id="L37">                    break;</span>
+                case 3:
+<span class="nc" id="L39">                    generateTranscript();</span>
+<span class="nc" id="L40">                    break;</span>
+                case 4:
+<span class="nc" id="L42">                    System.out.println(&quot;Logged out&quot;);</span>
+<span class="nc" id="L43">                    return;</span>
+                default:
+<span class="nc" id="L45">                    System.out.println(&quot;Invalid option selected&quot;);</span>
+                    break;
+            }
+        }
+    }
+
+    public void editCourseCatalog() {
+<span class="nc" id="L52">        Scanner scanner = new Scanner(System.in);</span>
+        
+        // Authenticate the user
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        if (!authenticateUser(scanner)) {</span>
+<span class="nc" id="L56">        System.out.println(&quot;Invalid username or password&quot;);</span>
+<span class="nc" id="L57">        return;</span>
+        }
+    
+        // If authenticated, allow the user to edit the course catalog
+<span class="nc" id="L61">        while (true) {</span>
+<span class="nc" id="L62">            System.out.println(&quot;Press 1 to add a course&quot;);</span>
+<span class="nc" id="L63">            System.out.println(&quot;Press 2 to delete a course&quot;);</span>
+<span class="nc" id="L64">            System.out.println(&quot;Press 3 to update a course&quot;);</span>
+<span class="nc" id="L65">            System.out.println(&quot;Press 4 to exit&quot;);</span>
+<span class="nc" id="L66">            int option = scanner.nextInt();</span>
+<span class="nc" id="L67">            scanner.nextLine(); // consume the newline character</span>
+    
+<span class="nc bnc" id="L69" title="All 5 branches missed.">            switch (option) {</span>
+                case 1:
+                    // Add a course to the course catalog
+<span class="nc" id="L72">                    System.out.println(&quot;Enter the course code:&quot;);</span>
+<span class="nc" id="L73">                    String courseCode = scanner.nextLine();</span>
+<span class="nc" id="L74">                    System.out.println(&quot;Enter the L-T-P value:&quot;);</span>
+<span class="nc" id="L75">                    String ltp = scanner.nextLine();</span>
+<span class="nc" id="L76">                    System.out.println(&quot;Enter the prerequisites:&quot;);</span>
+<span class="nc" id="L77">                    String prerequisites = scanner.nextLine();</span>
+<span class="nc" id="L78">                    System.out.println(&quot;Enter the number of credits:&quot;);</span>
+<span class="nc" id="L79">                    int credits = scanner.nextInt();</span>
+<span class="nc" id="L80">                    scanner.nextLine(); // consume the newline character</span>
+    
+                    try {
+<span class="nc" id="L83">                        PreparedStatement statement = connection.prepareStatement(&quot;INSERT INTO coursecatalog (coursecode, ltp, pre_req, credits) VALUES (?, ?, ?, ?)&quot;);</span>
+<span class="nc" id="L84">                        statement.setString(1, courseCode);</span>
+<span class="nc" id="L85">                        statement.setString(2, ltp);</span>
+<span class="nc" id="L86">                        statement.setString(3, prerequisites);</span>
+<span class="nc" id="L87">                        statement.setInt(4, credits);</span>
+<span class="nc" id="L88">                        statement.executeUpdate();</span>
+<span class="nc" id="L89">                        statement.close();</span>
+<span class="nc" id="L90">                        System.out.println(&quot;Course added successfully&quot;);</span>
+<span class="nc" id="L91">                    } catch (SQLException e) {</span>
+<span class="nc" id="L92">                        System.out.println(&quot;Error adding course: &quot; + e.getMessage());</span>
+                    }
+    
+<span class="nc" id="L95">                    break;</span>
+                case 2:
+                    // Delete a course from the course catalog
+<span class="nc" id="L98">                    System.out.println(&quot;Enter the course code:&quot;);</span>
+<span class="nc" id="L99">                    courseCode = scanner.nextLine();</span>
+    
+                    try {
+<span class="nc" id="L102">                        PreparedStatement statement = connection.prepareStatement(&quot;DELETE FROM coursecatalog WHERE coursecode = ?&quot;);</span>
+<span class="nc" id="L103">                        statement.setString(1, courseCode);</span>
+<span class="nc" id="L104">                        int numRowsDeleted = statement.executeUpdate();</span>
+<span class="nc" id="L105">                        statement.close();</span>
+    
+<span class="nc bnc" id="L107" title="All 2 branches missed.">                        if (numRowsDeleted &gt; 0) {</span>
+<span class="nc" id="L108">                            System.out.println(&quot;Course deleted successfully&quot;);</span>
+<span class="nc" id="L109">                        } else {</span>
+<span class="nc" id="L110">                            System.out.println(&quot;No such course found&quot;);</span>
+                        }
+<span class="nc" id="L112">                    } catch (SQLException e) {</span>
+<span class="nc" id="L113">                        System.out.println(&quot;Error deleting course: &quot; + e.getMessage());</span>
+                    }
+    
+<span class="nc" id="L116">                    break;</span>
+                case 3:
+                // Update a course in the course catalog
+<span class="nc" id="L119">                System.out.println(&quot;Enter the course code:&quot;);</span>
+<span class="nc" id="L120">                String course_Code = scanner.nextLine();</span>
+
+                try {
+<span class="nc" id="L123">                PreparedStatement statement = connection.prepareStatement(&quot;SELECT * FROM coursecatalog WHERE coursecode = ?&quot;);</span>
+<span class="nc" id="L124">                statement.setString(1, course_Code);</span>
+<span class="nc" id="L125">                ResultSet rs = statement.executeQuery();</span>
+<span class="nc" id="L126">                boolean courseExists = rs.next();</span>
+<span class="nc" id="L127">                rs.close();</span>
+<span class="nc" id="L128">                statement.close();</span>
+
+<span class="nc bnc" id="L130" title="All 2 branches missed.">                if (!courseExists) {</span>
+<span class="nc" id="L131">                System.out.println(&quot;No such course found.&quot;);</span>
+<span class="nc" id="L132">                break;</span>
+                }
+
+<span class="nc" id="L135">    System.out.println(&quot;Enter the new L-T-P value:&quot;);</span>
+<span class="nc" id="L136">    String l_t_p = scanner.nextLine();</span>
+
+<span class="nc" id="L138">    System.out.println(&quot;Enter the new pre-requisites:&quot;);</span>
+<span class="nc" id="L139">    String pre_req = scanner.nextLine();</span>
+
+<span class="nc" id="L141">    System.out.println(&quot;Enter the new credits:&quot;);</span>
+<span class="nc" id="L142">    int credits_ = scanner.nextInt();</span>
+
+<span class="nc" id="L144">    statement = connection.prepareStatement(&quot;UPDATE coursecatalog SET ltp = ?, pre_req = ?, credits = ? WHERE coursecode = ?&quot;);</span>
+<span class="nc" id="L145">    statement.setString(1, l_t_p);</span>
+<span class="nc" id="L146">    statement.setString(2, pre_req);</span>
+<span class="nc" id="L147">    statement.setInt(3, credits_);</span>
+<span class="nc" id="L148">    statement.setString(4, course_Code);</span>
+<span class="nc" id="L149">    int rowsUpdated = statement.executeUpdate();</span>
+<span class="nc" id="L150">    statement.close();</span>
+
+<span class="nc bnc" id="L152" title="All 2 branches missed.">    if (rowsUpdated &gt; 0) {</span>
+<span class="nc" id="L153">        System.out.println(&quot;Course updated successfully.&quot;);</span>
+<span class="nc" id="L154">    } else {</span>
+<span class="nc" id="L155">        System.out.println(&quot;Failed to update course.&quot;);</span>
+    }
+
+<span class="nc" id="L158">} catch (SQLException e) {</span>
+<span class="nc" id="L159">    System.out.println(&quot;Error occurred while updating course: &quot; + e.getMessage());</span>
+}
+               case 4:
+<span class="nc" id="L162">               return;</span>
+}
+}
+}
+    private boolean authenticateUser(Scanner scanner) {
+<span class="nc" id="L167">        System.out.println(&quot;Enter your username:&quot;);</span>
+<span class="nc" id="L168">        String username = scanner.nextLine();</span>
+<span class="nc" id="L169">        System.out.println(&quot;Enter your password:&quot;);</span>
+<span class="nc" id="L170">        String password = scanner.nextLine();</span>
+
+        try {
+<span class="nc" id="L173">            PreparedStatement statement = connection.prepareStatement(&quot;SELECT * FROM acad_auth WHERE username = ?&quot;);</span>
+<span class="nc" id="L174">            statement.setString(1, username);</span>
+<span class="nc" id="L175">            ResultSet rs = statement.executeQuery();</span>
+<span class="nc bnc" id="L176" title="All 2 branches missed.">            if (rs.next()) {</span>
+<span class="nc" id="L177">                String storedPassword = rs.getString(&quot;password&quot;);</span>
+<span class="nc bnc" id="L178" title="All 2 branches missed.">                if (storedPassword.equals(password)) {</span>
+<span class="nc" id="L179">                    rs.close();</span>
+<span class="nc" id="L180">                    statement.close();</span>
+<span class="nc" id="L181">                    return true;</span>
+                }
+            }
+<span class="nc" id="L184">            rs.close();</span>
+<span class="nc" id="L185">            statement.close();</span>
+<span class="nc" id="L186">        } catch (SQLException e) {</span>
+<span class="nc" id="L187">            System.out.println(&quot;Error checking authentication: &quot; + e.getMessage());</span>
+        }
+
+<span class="nc" id="L190">        return false;</span>
+    }
+
+    static void viewGradesOfAllStudents(Connection connection) {
+        try {
+<span class="nc" id="L195">            PreparedStatement statement = connection.prepareStatement(&quot;SELECT * FROM record_of_grades&quot;);</span>
+<span class="nc" id="L196">            ResultSet rs = statement.executeQuery();</span>
+
+<span class="nc" id="L198">            System.out.printf(&quot;%s %s %s %s %s\n&quot;, &quot;Name&quot;, &quot;Email ID&quot;, &quot;Course Code&quot;, &quot;Semester&quot;, &quot;Grade&quot;);</span>
+<span class="nc bnc" id="L199" title="All 2 branches missed.">            while (rs.next()) {</span>
+<span class="nc" id="L200">                String emailId = rs.getString(&quot;email_id&quot;);</span>
+<span class="nc" id="L201">                String courseCode = rs.getString(&quot;course_code&quot;);</span>
+<span class="nc" id="L202">                int semester = rs.getInt(&quot;semester&quot;);</span>
+<span class="nc" id="L203">                String grade = rs.getString(&quot;grade&quot;);</span>
+
+<span class="nc" id="L205">                PreparedStatement userStatement = connection.prepareStatement(&quot;SELECT name FROM record_of_grades WHERE email_id = ?&quot;);</span>
+<span class="nc" id="L206">                userStatement.setString(1, emailId);</span>
+<span class="nc" id="L207">                ResultSet userRs = userStatement.executeQuery();</span>
+<span class="nc" id="L208">                userRs.next();</span>
+<span class="nc" id="L209">                String name = userRs.getString(&quot;name&quot;);</span>
+                // String lastName = userRs.getString(&quot;last_name&quot;);
+                // String name = firstName + &quot; &quot; + lastName;
+
+<span class="nc" id="L213">                System.out.printf(&quot;%s %s %s %s %s\n&quot;, name, emailId, courseCode, semester, grade);</span>
+            }
+<span class="nc" id="L215">        } catch (SQLException e) {</span>
+<span class="nc" id="L216">            System.out.println(&quot;Error viewing grades: &quot; + e.getMessage());</span>
+        }
+<span class="nc" id="L218">    }</span>
+
+    static void generateTranscript() {
+<span class="nc" id="L221">        Scanner scanner = new Scanner(System.in);</span>
+
+<span class="nc" id="L223">        System.out.println(&quot;Enter the email ID of the student:&quot;);</span>
+<span class="nc" id="L224">        String emailId = scanner.nextLine();</span>
+
+        try {
+<span class="nc" id="L227">            PreparedStatement statement = connection</span>
+<span class="nc" id="L228">                    .prepareStatement(&quot;SELECT course_code, grade, semester FROM record_of_grades WHERE email_id = ?&quot;, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);</span>
+<span class="nc" id="L229">            statement.setString(1, emailId);</span>
+<span class="nc" id="L230">            ResultSet rs = statement.executeQuery();</span>
+
+            // Check if the student has any grades
+<span class="nc bnc" id="L233" title="All 2 branches missed.">            if (!rs.isBeforeFirst()) {</span>
+<span class="nc" id="L234">                System.out.println(&quot;No grades found for student with Email ID &quot; + emailId);</span>
+<span class="nc" id="L235">                return;</span>
+            }
+
+            // Print the header of the transcript
+<span class="nc" id="L239">            System.out.println(&quot;Transcript for student &quot; + emailId + &quot;:&quot;);</span>
+<span class="nc" id="L240">            System.out.printf(&quot;%-15s %-10s %-15s%n&quot;, &quot;Course code&quot;, &quot;Grade&quot;, &quot;Semester&quot;);</span>
+<span class="nc" id="L241">            System.out.println(&quot;----------------------------------&quot;);</span>
+
+            // Print the grades
+<span class="nc bnc" id="L244" title="All 2 branches missed.">            while (rs.next()) {</span>
+<span class="nc" id="L245">                String courseCode = rs.getString(&quot;course_code&quot;);</span>
+<span class="nc" id="L246">                String grade = rs.getString(&quot;grade&quot;);</span>
+<span class="nc" id="L247">                int semester = rs.getInt(&quot;semester&quot;);</span>
+<span class="nc" id="L248">                System.out.printf(&quot;%-15s %-10s %-15s%n&quot;, courseCode, grade, semester);</span>
+            }
+
+            // Save the transcript to a file
+<span class="nc" id="L252">            String fileName = emailId + &quot;.txt&quot;;</span>
+<span class="nc" id="L253">            PrintWriter writer = new PrintWriter(fileName);</span>
+<span class="nc" id="L254">            writer.println(&quot;Transcript for student &quot; + emailId + &quot;:&quot;);</span>
+<span class="nc" id="L255">            writer.printf(&quot;%-15s %-10s %-15s%n&quot;, &quot;Course code&quot;, &quot;Grade&quot;, &quot;Semester&quot;);</span>
+<span class="nc" id="L256">            writer.println(&quot;----------------------------------&quot;);</span>
+<span class="nc" id="L257">            rs.beforeFirst(); // Move the cursor to the beginning of the result set</span>
+<span class="nc bnc" id="L258" title="All 2 branches missed.">            while (rs.next()) {</span>
+<span class="nc" id="L259">                String courseCode = rs.getString(&quot;course_code&quot;);</span>
+<span class="nc" id="L260">                String grade = rs.getString(&quot;grade&quot;);</span>
+<span class="nc" id="L261">                int semester = rs.getInt(&quot;semester&quot;);</span>
+<span class="nc" id="L262">                writer.printf(&quot;%-15s %-10s %-15s%n&quot;, courseCode, grade, semester);</span>
+            }
+<span class="nc" id="L264">            writer.close();</span>
+
+<span class="nc" id="L266">            System.out.println(&quot;Transcript saved to file &quot; + fileName);</span>
+<span class="nc" id="L267">        } catch (SQLException | FileNotFoundException e) {</span>
+<span class="nc" id="L268">            System.out.println(&quot;Error generating transcript: &quot; + e.getMessage());</span>
+        }
+<span class="nc" id="L270">    }</span>
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

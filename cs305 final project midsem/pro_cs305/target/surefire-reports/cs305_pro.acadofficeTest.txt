@@ -1,0 +1,8 @@
+-------------------------------------------------------------------------------
+Test set: cs305_pro.acadofficeTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 1.381 s <<< FAILURE! - in cs305_pro.acadofficeTest
+testViewGradesOfAllStudents(cs305_pro.acadofficeTest)  Time elapsed: 1.31 s  <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "java.sql.PreparedStatement.executeQuery()" because "statement" is null
+	at cs305_pro.acadofficeTest.testViewGradesOfAllStudents(acadofficeTest.java:64)
+

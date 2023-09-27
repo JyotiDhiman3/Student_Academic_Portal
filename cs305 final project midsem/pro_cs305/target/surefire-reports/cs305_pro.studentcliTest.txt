@@ -1,0 +1,25 @@
+-------------------------------------------------------------------------------
+Test set: cs305_pro.studentcliTest
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.494 s <<< FAILURE! - in cs305_pro.studentcliTest
+testViewAvailableCourses(cs305_pro.studentcliTest)  Time elapsed: 0.008 s  <<< FAILURE!
+org.junit.ComparisonFailure: 
+expected:<...ailable courses:
+CS[305 4-1-0 NIL 4
+CS507 4-1-0 CS305 4
+BM403 3-0-0 NIL 3
+GE404 2-0-2 NIL 3
+CS401 3-0-0 CS303 3
+CS303 3-1-2 NIL 4
+MA101 3-0-2 NIL 4
+MA201 3-0-0 NIL 3
+MA301 3-1-2 MA101,MA201 4
+HS402 2-0-0 NIL 2]
+> but was:<...ailable courses:
+CS[101 3-0-0 NIL 3
+CS102 3-0-0 NIL 3
+CS201 3-0-0 CS101 3
+CS202 3-0-0 CS101,CS102 3]
+>
+	at cs305_pro.studentcliTest.testViewAvailableCourses(studentcliTest.java:74)
+

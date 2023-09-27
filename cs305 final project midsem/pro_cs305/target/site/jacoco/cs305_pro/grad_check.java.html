@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>grad_check.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">pro_cs305</a> &gt; <a href="index.source.html" class="el_package">cs305_pro</a> &gt; <span class="el_source">grad_check.java</span></div><h1>grad_check.java</h1><pre class="source lang-java linenums">package cs305_pro;
+
+import java.sql.*;
+
+<span class="nc" id="L5">public class grad_check {</span>
+    private static final String DB_URL = &quot;jdbc:postgresql://localhost:5432/db&quot;;
+    private static final String DB_USER = &quot;postgres&quot;;
+    private static final String DB_PASSWORD = &quot;1234&quot;;
+
+    // Check if the specified student is eligible for graduation
+    public static void main(String[] args) {
+<span class="nc" id="L12">        boolean isEligible = checkGraduationEligibility();</span>
+<span class="nc bnc" id="L13" title="All 2 branches missed.">        if (isEligible) {</span>
+<span class="nc" id="L14">            System.out.println(&quot;Congratulations! You are eligible for graduation.&quot;);</span>
+<span class="nc" id="L15">        } else {</span>
+<span class="nc" id="L16">            System.out.println(&quot;Sorry, you are not yet eligible for graduation.&quot;);</span>
+        }
+<span class="nc" id="L18">    }</span>
+
+        private static boolean checkGraduationEligibility() {
+<span class="nc" id="L21">        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {</span>
+        // Query the course_completion table to get the student_id where all the course requirements are met
+<span class="nc" id="L23">        String courseSql = &quot;SELECT email_id FROM course_completion WHERE course_type = 'Program core' AND completed = true &quot; +</span>
+                &quot;UNION SELECT email_id FROM course_completion WHERE course_type = 'Program elective' AND completed = true GROUP BY email_id &quot; +
+                &quot;HAVING COUNT(*) &gt;= 3 AND SUM(CASE WHEN grade &gt;= 'D' THEN 1 ELSE 0 END) &gt;= 2 &quot; +
+                &quot;UNION SELECT email_id FROM course_completion WHERE course_code = 'BTP' AND completed = true AND grade &gt;= 'D'&quot;;
+
+<span class="nc" id="L28">        try (PreparedStatement courseStmt = conn.prepareStatement(courseSql)) {</span>
+<span class="nc" id="L29">            ResultSet courseRs = courseStmt.executeQuery();</span>
+
+            // Iterate through the result set and check each student's eligibility
+<span class="nc bnc" id="L32" title="All 2 branches missed.">            while (courseRs.next()) {</span>
+<span class="nc" id="L33">                String email_id = courseRs.getString(1);</span>
+
+                // Call the stored procedure to check the student's eligibility
+<span class="nc" id="L36">                String spSql = &quot;SELECT * FROM check_graduation_eligibility(?)&quot;;</span>
+<span class="nc" id="L37">                try (PreparedStatement spStmt = conn.prepareStatement(spSql)) {</span>
+<span class="nc" id="L38">                    spStmt.setString(1, email_id);</span>
+<span class="nc" id="L39">                    ResultSet spRs = spStmt.executeQuery();</span>
+<span class="nc" id="L40">                    spRs.next();</span>
+<span class="nc" id="L41">                    boolean isEligible = spRs.getBoolean(1);</span>
+<span class="nc bnc" id="L42" title="All 2 branches missed.">                    if (isEligible) {</span>
+<span class="nc" id="L43">                        System.out.println(&quot;Congratulations! Student &quot; + email_id + &quot; is eligible for graduation.&quot;);</span>
+<span class="nc" id="L44">                    } else {</span>
+<span class="nc" id="L45">                        System.out.println(&quot;Sorry, student &quot; + email_id + &quot; is not yet eligible for graduation.&quot;);</span>
+                    }
+                }
+            }
+        }
+<span class="nc" id="L50">        return true;</span>
+<span class="nc" id="L51">    } catch (SQLException ex) {</span>
+        // Handle any database errors
+<span class="nc" id="L53">        ex.printStackTrace();</span>
+<span class="nc" id="L54">        return false;</span>
+    }
+}
+}
+   
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

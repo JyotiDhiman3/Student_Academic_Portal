@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>loginCLI.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">pro_cs305</a> &gt; <a href="index.source.html" class="el_package">cs305_pro</a> &gt; <span class="el_source">loginCLI.java</span></div><h1>loginCLI.java</h1><pre class="source lang-java linenums">package cs305_pro;
+
+//package net.codejava.jdbc;
+
+import cs305_pro.studentcli;
+import java.sql.*;
+import java.util.Scanner;
+
+//public class loginCLI {
+
+<span class="nc" id="L11">public class loginCLI {</span>
+    public static void main(String[] args) throws SQLException{
+
+<span class="nc" id="L14">        Connection connection = null;</span>
+        try {
+<span class="nc" id="L16">            connection = DriverManager.getConnection(&quot;jdbc:postgresql://localhost:5432/db&quot;, &quot;postgres&quot;, &quot;1234&quot;);</span>
+<span class="nc" id="L17">            System.out.println(&quot;Connected to database&quot;);</span>
+<span class="nc" id="L18">        } catch (SQLException e) {</span>
+<span class="nc" id="L19">            System.out.println(&quot;Unable to connect to database: &quot; + e.getMessage());</span>
+<span class="nc" id="L20">            System.exit(1);</span>
+        }
+<span class="nc" id="L22">        Scanner scanner = new Scanner(System.in);</span>
+
+        // Print the login options
+<span class="nc" id="L25">        System.out.println(&quot;Press 1 to login as a student&quot;);</span>
+<span class="nc" id="L26">        System.out.println(&quot;Press 2 to login as a faculty&quot;);</span>
+<span class="nc" id="L27">        System.out.println(&quot;Press 3 to login as academic office&quot;);</span>
+
+        // Take user input
+<span class="nc" id="L30">        int option = scanner.nextInt();</span>
+
+        // Handle the user input
+<span class="nc bnc" id="L33" title="All 4 branches missed.">        switch (option) {</span>
+            case 1:
+                // Login as a student
+<span class="nc" id="L36">                studentcli cli = new studentcli();</span>
+<span class="nc" id="L37">                cli.run(connection);</span>
+<span class="nc" id="L38">                break;</span>
+            case 2:
+                // Login as a faculty
+<span class="nc" id="L41">                facultycli fcli = new facultycli();</span>
+<span class="nc" id="L42">                fcli.run(connection);</span>
+<span class="nc" id="L43">                break;</span>
+            case 3:
+                // Login as an academic office
+<span class="nc" id="L46">                acadofficecli acli = new acadofficecli();</span>
+<span class="nc" id="L47">                acli.initializeConnection();</span>
+<span class="nc" id="L48">                acli.run(connection);</span>
+                break;
+        }
+<span class="nc" id="L51">        scanner.close();</span>
+<span class="nc" id="L52">    }</span>
+
+}
+
+    
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

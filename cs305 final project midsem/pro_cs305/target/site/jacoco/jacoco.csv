@@ -1,0 +1,10 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+pro_cs305,cs305_pro,grad_check,101,0,6,0,27,0,6,0,3,0
+pro_cs305,cs305_pro,App,7,0,0,0,3,0,2,0,2,0
+pro_cs305,cs305_pro,ContactProgram,27,0,0,0,11,0,2,0,2,0
+pro_cs305,cs305_pro,facultycli,556,0,28,0,153,0,25,0,9,0
+pro_cs305,cs305_pro,cli,119,0,6,0,29,0,5,0,2,0
+pro_cs305,cs305_pro,studentcli,1046,0,93,0,312,0,67,0,13,0
+pro_cs305,cs305_pro,JacocoAgent,8,0,0,0,3,0,2,0,2,0
+pro_cs305,cs305_pro,acadofficecli,680,0,30,0,171,0,25,0,7,0
+pro_cs305,cs305_pro,loginCLI,74,0,4,0,24,0,5,0,2,0

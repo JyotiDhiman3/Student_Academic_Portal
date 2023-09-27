@@ -1,0 +1,6 @@
+Transcript for student 2020csb1092@iitrpr.ac.in:
+Course code     Grade      Semester       
+----------------------------------
+CS507           B-         5              
+BM403           A          4              
+CS305           A          6              
