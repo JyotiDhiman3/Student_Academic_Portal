@@ -6,6 +6,7 @@ Designed and implemented a multi-user database application for managing the acad
 ● Academics Office
 
 Our database comprises of the following concepts:
+
 1. **Course Catalog:** This contains all the list of courses which can be offered in IIT Ropar. For each
 course, we have information on its credit structure (L-T-P) and list of prerequisites (if any).
 2. **Course Offerings:** Each semester, a faculty offers one or multiple courses. These courses should
